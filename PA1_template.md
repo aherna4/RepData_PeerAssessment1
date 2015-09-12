@@ -1,18 +1,14 @@
----
-title: "Reproducible Research: Peer Assessment 1"
-output: 
-  html_document:
-    keep_md: true
----
+# Reproducible Research: Peer Assessment 1
 
-```{r setup, message=FALSE, warning=FALSE}
+
+```r
 library(ggplot2)
 ```
 
 
 ### Loading and preprocessing the data
 
-```{r load_and_preprocess_data}
+```r
 unzip('activity.zip')
 activity <- read.csv('activity.csv')
 activity$date <- as.POSIXct(activity$date, format="%Y-%m-%d")
@@ -26,27 +22,38 @@ Let us start by:
 * plotting the histogram of the total number of steps taken per day.
 * calculating the mean and median of the total number of steps taken per day.
 
-```{r mean_total_steps}
+
+```r
 steps_per_day <- data.frame(total_steps = tapply(activity$steps, activity$date, sum))
 
 ggplot(steps_per_day, aes(total_steps)) + geom_histogram(binwidth = 500)
+```
 
+![](PA1_template_files/figure-html/mean_total_steps-1.png) 
+
+```r
 mean(steps_per_day$total_steps, na.rm = TRUE)
+```
+
+```
+## [1] 10766.19
+```
+
+```r
 median(steps_per_day$total_steps, na.rm = TRUE)
 ```
+
+```
+## [1] 10765
+```
+  
   
 ### What is the average daily activity pattern?
 
-```{r}
-steps_per_interval <- aggregate(activity$steps, 
-                                by = list(interval = activity$interval),
-                                FUN=mean, na.rm=TRUE)
-plot(steps_per_interval, type = 'l')
-grid()
-```
+
 
 ### Imputing missing values
-plot(as.ts(activity$steps))
+
 
 
 ### Are there differences in activity patterns between weekdays and weekends?
