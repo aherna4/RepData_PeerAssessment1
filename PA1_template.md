@@ -60,15 +60,21 @@ Which 5-minute interval, on average across all the days in the dataset, contains
 
 ```r
 max_interval <- steps_per_interval$Group.1[which(steps_per_interval$x == max(steps_per_interval$x))]
+
+max_interval
 ```
 
-So it appears that interval 835 is the maximum.
+```
+## [1] 835
+```
+
+Interval 835 is the maximum.
 
 ### Imputing missing values
 
 Here, we will clean missing days that may introduce bias into some calculations or summaries of the data.
 
-1. Calculate and report the total number of missing values in the dataset (i.e. the total number of rows with `NA`s)
+1. We calculate and report the total number of missing values in the dataset (i.e. the total number of rows with `NA`s)
 
 
 ```r
@@ -79,10 +85,42 @@ sum(is.na(activity))
 ## [1] 2304
 ```
 
-2. Devise a strategy for filling in all of the missing values in the dataset. The strategy does not need to be sophisticated. For example, you could use the mean/median for that day, or the mean for that 5-minute interval, etc.
+2. Next, we will make use the 5-minute interval means we calculated above to fill in the missing values.
 
-3. Create a new dataset that is equal to the original dataset but with the missing data filled in.
+3. Additionally, we will create a new dataset that is equal to the original dataset but with the missing data filled in.
 
-4. Make a histogram of the total number of steps taken each day and Calculate and report the **mean** and **median** total number of steps taken per day. Do these values differ from the estimates from the first part of the assignment? What is the impact of imputing missing data on the estimates of the total daily number of steps?
+
+```r
+new_activity <- activity
+
+for(i in 1:nrow(activity)) {
+  if(is.na(activity$steps[i])) {
+    new_activity$steps[i] <- steps_per_interval$x[which(activity$interval[i] == steps_per_interval$Group.1)]
+  }
+}
+```
+
+4. Finally, we make a histogram of the total number of steps taken each day and report the **mean** and **median** total number of steps taken per day. 
+
+
+```r
+new_steps_per_day <- data.frame(total_steps = tapply(new_activity$steps, new_activity$date, sum))
+
+ggplot(new_steps_per_day, aes(total_steps)) + geom_histogram()
+```
+
+![](PA1_template_files/figure-html/unnamed-chunk-7-1.png) 
+
+
+```r
+new_mean <- mean(new_steps_per_day$total_steps)
+new_median <- median(new_steps_per_day$total_steps)
+```
+
+The mean is 1.0766189\times 10^{4} and the median is 1.0766189\times 10^{4}.
+From above, the mean and median of our data without replacing the missing values were 1.0766189\times 10^{4} and 10765, respectively.
+
+The differences between the means is 0 and the difference between the medians is 1.1886792. So, there is a slight difference on the median values, but no difference in the mean values.
+
 
 ### Are there differences in activity patterns between weekdays and weekends?
