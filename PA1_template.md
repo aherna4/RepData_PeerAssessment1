@@ -24,7 +24,11 @@ steps_per_day <- data.frame(total_steps = tapply(activity$steps, activity$date, 
 
 
 ```r
-ggplot(steps_per_day, aes(total_steps)) + geom_histogram(binwidth = 500)
+ggplot(steps_per_day, aes(total_steps)) + geom_histogram()
+```
+
+```
+## stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust this.
 ```
 
 ![](PA1_template_files/figure-html/histogram_one-1.png) 
