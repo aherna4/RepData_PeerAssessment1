@@ -34,7 +34,7 @@ ggplot(steps_per_day, aes(total_steps)) + geom_histogram(binwidth = 500)
 
 
 ```r
-mean <- mean(steps_per_day$total_steps, na.rm = TRUE)
+mean_ <- mean(steps_per_day$total_steps, na.rm = TRUE)
 median <- median(steps_per_day$total_steps, na.rm = TRUE)
 ```
   
@@ -118,9 +118,30 @@ new_median <- median(new_steps_per_day$total_steps)
 ```
 
 The mean is 1.0766189\times 10^{4} and the median is 1.0766189\times 10^{4}.
-From above, the mean and median of our data without replacing the missing values were 1.0766189\times 10^{4} and 10765, respectively.
+From earlier, the mean and median of our data without replacing the missing values were 1.0766189\times 10^{4} and 10765, respectively.
 
 The differences between the means is 0 and the difference between the medians is 1.1886792. So, there is a slight difference on the median values, but no difference in the mean values.
 
-
 ### Are there differences in activity patterns between weekdays and weekends?
+
+1. To answer this question, we create a new factor variable in the dataset with two levels -- "weekday" and "weekend" indicating whether a given date is a weekday or weekend day.
+
+
+```r
+new_activity$weekdays <- weekdays(new_activity$date)
+
+new_activity$weekdays[new_activity$weekdays == 'Monday' | new_activity$weekdays == 'Tuesday' | new_activity$weekdays == 'Wednesday' | new_activity$weekdays == 'Thursday' | new_activity$weekdays == 'Friday'] <- 'weekday'
+
+new_activity$weekdays[new_activity$weekdays == 'Saturday' | new_activity$weekdays == 'Sunday'] <- 'weekend'
+```
+
+2. Now, we make a panel plot containing a time series plot of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis).
+
+
+```r
+steps_per_int_wd <- aggregate(steps ~ interval + weekdays, FUN = mean, data = new_activity)
+
+ggplot(steps_per_int_wd, aes(interval, steps)) + geom_line() + facet_grid(weekdays~.)
+```
+
+![](PA1_template_files/figure-html/unnamed-chunk-10-1.png) 
