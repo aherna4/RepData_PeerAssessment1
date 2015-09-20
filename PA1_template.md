@@ -2,7 +2,6 @@
 
 
 
-
 #### Downloading, reading, and formating the data.
 
 
@@ -14,27 +13,27 @@ activity$date <- as.POSIXct(activity$date, format="%Y-%m-%d")
 
 ### What is mean total number of steps taken per day?
 
-* First, we calculate the total number of states per day.
+1. First, we calculate the total number of states per day.
 
 
 ```r
 steps_per_day <- data.frame(total_steps = tapply(activity$steps, activity$date, sum))
 ```
 
-* Next, we plot the histogram of the total number of steps taken per day.
+2. Next, we plot the histogram of the total number of steps taken per day.
 
 
 ```r
 ggplot(steps_per_day, aes(total_steps)) + geom_histogram(binwidth = 500)
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-1-1.png) 
+![](PA1_template_files/figure-html/histogram_one-1.png) 
 
-* Finally, we calculate the mean and median of the total number of steps taken per day.
+3. Finally, we calculate the mean and median of the total number of steps taken per day.
 
 
 ```r
-mean_ <- mean(steps_per_day$total_steps, na.rm = TRUE)
+mean_one <- mean(steps_per_day$total_steps, na.rm = TRUE)
 median <- median(steps_per_day$total_steps, na.rm = TRUE)
 ```
   
@@ -46,13 +45,12 @@ To answer this question, we make a time series plot of the 5-minute interval (x-
 
 
 ```r
-steps_per_interval <- aggregate(activity$steps, list(activity$interval),
-                                mean, na.rm = TRUE)
+steps_per_interval <- aggregate(activity$steps, list(activity$interval), mean, na.rm = TRUE)
 plot(steps_per_interval, type = 'l')
 grid()
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-3-1.png) 
+![](PA1_template_files/figure-html/by_interval-1.png) 
 
 From this data, we can also answer the following question:
 Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
@@ -60,12 +58,6 @@ Which 5-minute interval, on average across all the days in the dataset, contains
 
 ```r
 max_interval <- steps_per_interval$Group.1[which(steps_per_interval$x == max(steps_per_interval$x))]
-
-max_interval
-```
-
-```
-## [1] 835
 ```
 
 Interval 835 is the maximum.
@@ -109,7 +101,7 @@ new_steps_per_day <- data.frame(total_steps = tapply(new_activity$steps, new_act
 ggplot(new_steps_per_day, aes(total_steps)) + geom_histogram()
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-7-1.png) 
+![](PA1_template_files/figure-html/hist_two-1.png) 
 
 
 ```r
@@ -144,4 +136,6 @@ steps_per_int_wd <- aggregate(steps ~ interval + weekdays, FUN = mean, data = ne
 ggplot(steps_per_int_wd, aes(interval, steps)) + geom_line() + facet_grid(weekdays~.)
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-10-1.png) 
+![](PA1_template_files/figure-html/plot_by_day-1.png) 
+
+From the plots above, it appears that there is overall more activity during the weekdays, but both weekdays and weekends seem to have a similar pattern of activity during the same intervals.
